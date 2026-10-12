@@ -62,5 +62,5 @@
     "react": ">=18",
     "react-dom": ">=18"
   },
-  "packageManager": "pnpm@10.6.4"
+  "packageManager": "pnpm@10.30.3"
 }
