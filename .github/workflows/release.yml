@@ -114,6 +114,7 @@ jobs:
     # First-party reusable workflow, deliberately tracked at @main (MIGRATION.md, Regla 4).
     uses: withvariablelab/gh-actions/.github/workflows/preview-comment.yml@main # zizmor: ignore[unpinned-uses]
     with:
+      action: preview-release
       packages: ${{ needs.preview.outputs.packages }}
     secrets:
       VLAND_BOT_PRIVATE_KEY: ${{ secrets.VLAND_BOT_PRIVATE_KEY }}
