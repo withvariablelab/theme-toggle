@@ -1,5 +1,6 @@
 import * as React from "react";
 import { COLOR_MODE, COLOR_MODE_EVENT, COLOR_MODE_STORAGE_KEY, type ColorMode } from "./const.ts";
+import { migrateLegacyColorMode } from "./migrate.ts";
 
 export function useColorMode() {
   const [colorMode, setColorMode] = React.useState<ColorMode>(() => {
@@ -8,6 +9,8 @@ export function useColorMode() {
     }
 
     try {
+      migrateLegacyColorMode();
+
       const raw = localStorage.getItem(COLOR_MODE_STORAGE_KEY);
 
       if (!raw) {

@@ -1,6 +1,12 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { renderHook } from "vitest-browser-react";
-import { COLOR_MODE, COLOR_MODE_EVENT, COLOR_MODE_STORAGE_KEY, type ColorMode } from "../../src/const.ts";
+import {
+  COLOR_MODE,
+  COLOR_MODE_EVENT,
+  COLOR_MODE_STORAGE_KEY,
+  type ColorMode,
+  LEGACY_COLOR_MODE_STORAGE_KEY,
+} from "../../src/const.ts";
 import { useColorMode } from "../../src/index.ts";
 
 function hasDarkClass() {
@@ -87,6 +93,45 @@ describe("useColorMode — initialization from localStorage", () => {
     const { result } = await renderHook(() => useColorMode());
 
     expect(result.current.colorMode).toBe(COLOR_MODE.SYSTEM);
+    expect(consoleError).toHaveBeenCalledWith("Failed to read color mode from localStorage", expect.any(Error));
+
+    consoleError.mockRestore();
+  });
+});
+
+describe("useColorMode — migrates the @vlandoss/theme-toggle 1.x storage key", () => {
+  it("adopts the legacy value and removes the legacy key when the current key is absent", async () => {
+    localStorage.setItem(LEGACY_COLOR_MODE_STORAGE_KEY, COLOR_MODE.DARK);
+
+    const { result } = await renderHook(() => useColorMode());
+
+    expect(result.current.colorMode).toBe(COLOR_MODE.DARK);
+    expect(hasDarkClass()).toBe(true);
+    expect(readStoredMode()).toBe(COLOR_MODE.DARK);
+    expect(localStorage.getItem(LEGACY_COLOR_MODE_STORAGE_KEY)).toBeNull();
+  });
+
+  it("keeps the current key and leaves the legacy key untouched when both are present", async () => {
+    localStorage.setItem(COLOR_MODE_STORAGE_KEY, COLOR_MODE.LIGHT);
+    localStorage.setItem(LEGACY_COLOR_MODE_STORAGE_KEY, COLOR_MODE.DARK);
+
+    const { result } = await renderHook(() => useColorMode());
+
+    expect(result.current.colorMode).toBe(COLOR_MODE.LIGHT);
+    expect(hasDarkClass()).toBe(false);
+    expect(readStoredMode()).toBe(COLOR_MODE.LIGHT);
+    expect(localStorage.getItem(LEGACY_COLOR_MODE_STORAGE_KEY)).toBe(COLOR_MODE.DARK);
+  });
+
+  it('falls back to "system" and logs when the migrated legacy value is invalid', async () => {
+    const consoleError = vi.spyOn(console, "error").mockImplementation(() => {});
+    stubPrefersColorScheme(false);
+    localStorage.setItem(LEGACY_COLOR_MODE_STORAGE_KEY, "not-a-real-mode");
+
+    const { result } = await renderHook(() => useColorMode());
+
+    expect(result.current.colorMode).toBe(COLOR_MODE.SYSTEM);
+    expect(localStorage.getItem(LEGACY_COLOR_MODE_STORAGE_KEY)).toBeNull();
     expect(consoleError).toHaveBeenCalledWith("Failed to read color mode from localStorage", expect.any(Error));
 
     consoleError.mockRestore();

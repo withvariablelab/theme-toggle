@@ -1,4 +1,4 @@
-# @vlandoss/theme-toggle
+# @variablelab/theme-toggle
 
 Light/dark/system color-mode toggle for React apps, with a tiny inline script that
 sets the theme **before first paint** to avoid the flash of the wrong theme (FOUC).
@@ -12,7 +12,7 @@ sets the theme **before first paint** to avoid the flash of the wrong theme (FOU
 ## Installation
 
 ```sh
-pnpm add @vlandoss/theme-toggle
+pnpm add @variablelab/theme-toggle
 ```
 
 ## Usage
@@ -26,7 +26,7 @@ Load the prebuilt IIFE **before your app renders** — ideally as the first thin
 
 ```html
 <head>
-  <script src="https://unpkg.com/@vlandoss/theme-toggle/dist/initial.js"></script>
+  <script src="https://unpkg.com/@variablelab/theme-toggle/dist/initial.js"></script>
   <!-- ...rest of head... -->
 </head>
 ```
@@ -38,7 +38,7 @@ exposes its runtime contract on `window.__COLOR_MODE__`.
 ### 2. React hook (read & control the mode)
 
 ```tsx
-import { useColorMode } from "@vlandoss/theme-toggle";
+import { useColorMode } from "@variablelab/theme-toggle";
 
 function ThemeSwitch() {
   const { colorMode, setColorMode } = useColorMode();
@@ -81,17 +81,17 @@ body {
 
 ## How it works
 
-| Concern        | Value                                      |
-| -------------- | ------------------------------------------ |
-| DOM class      | `dark` on `document.documentElement`       |
-| Storage key    | `@vlandoss/theme-toggle.colorMode`         |
-| Change event   | `@vlandoss/theme-toggle.colorModeChange`   |
+| Concern      | Value                                       |
+| ------------ | ------------------------------------------- |
+| DOM class    | `dark` on `document.documentElement`        |
+| Storage key  | `@variablelab/theme-toggle.colorMode`       |
+| Change event | `@variablelab/theme-toggle.colorModeChange` |
 
 The change event is a `CustomEvent` dispatched on `document`, with the new value in
 `event.detail.colorMode`:
 
 ```ts
-document.addEventListener("@vlandoss/theme-toggle.colorModeChange", (event) => {
+document.addEventListener("@variablelab/theme-toggle.colorModeChange", (event) => {
   console.log(event.detail.colorMode); // "light" | "dark" | "system"
 });
 ```
@@ -99,6 +99,19 @@ document.addEventListener("@vlandoss/theme-toggle.colorModeChange", (event) => {
 The inline script also publishes these names on `window.__COLOR_MODE__`
 (`STORAGE_KEY`, `CUSTOM_EVENT`, `COLOR_MODE`) so other scripts can read them without
 importing the package.
+
+## Upgrading from `@vlandoss/theme-toggle` 1.x
+
+The package was renamed to `@variablelab/theme-toggle` in 2.0.0:
+
+1. Replace the dependency and imports: `pnpm remove @vlandoss/theme-toggle && pnpm add @variablelab/theme-toggle`,
+   and update the inline script URL to `https://unpkg.com/@variablelab/theme-toggle/dist/initial.js`.
+2. Listeners of the change event must use the new name, `@variablelab/theme-toggle.colorModeChange`
+   (or read it from `window.__COLOR_MODE__.CUSTOM_EVENT`).
+
+Saved preferences carry over automatically: on init, if the new storage key is empty and the old
+`@vlandoss/theme-toggle.colorMode` key exists, its value is copied to the new key and the old key
+is removed.
 
 ## Development
 

@@ -1,6 +1,9 @@
 import { COLOR_MODE, COLOR_MODE_EVENT, COLOR_MODE_STORAGE_KEY } from "./const.ts";
+import { migrateLegacyColorMode } from "./migrate.ts";
 
 function getColorMode() {
+  migrateLegacyColorMode();
+
   const persistedColorMode = localStorage.getItem(COLOR_MODE_STORAGE_KEY);
 
   return typeof persistedColorMode === "string" ? persistedColorMode : COLOR_MODE.SYSTEM;

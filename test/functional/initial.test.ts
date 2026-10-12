@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { COLOR_MODE, COLOR_MODE_EVENT, COLOR_MODE_STORAGE_KEY } from "../../src/const.ts";
+import { COLOR_MODE, COLOR_MODE_EVENT, COLOR_MODE_STORAGE_KEY, LEGACY_COLOR_MODE_STORAGE_KEY } from "../../src/const.ts";
 
 // A fresh query string forces the browser to re-evaluate the side-effectful
 // module; vi.resetModules() does not re-run native modules in Browser Mode.
@@ -97,9 +97,52 @@ describe("initial.ts — defaults to system on first visit", () => {
   });
 });
 
+describe("initial.ts — migrates the @vlandoss/theme-toggle 1.x storage key", () => {
+  it("adopts the legacy value and removes the legacy key when the current key is absent", async () => {
+    localStorage.setItem(LEGACY_COLOR_MODE_STORAGE_KEY, COLOR_MODE.DARK);
+    const matchMedia = stubPrefersDark(false);
+
+    await runInitialScript();
+
+    expect(hasDarkClass()).toBe(true);
+    expect(localStorage.getItem(COLOR_MODE_STORAGE_KEY)).toBe(COLOR_MODE.DARK);
+    expect(localStorage.getItem(LEGACY_COLOR_MODE_STORAGE_KEY)).toBeNull();
+    expect(matchMedia).not.toHaveBeenCalled();
+  });
+
+  it('migrates a legacy "system" value and resolves it against the OS preference', async () => {
+    localStorage.setItem(LEGACY_COLOR_MODE_STORAGE_KEY, COLOR_MODE.SYSTEM);
+    stubPrefersDark(true);
+
+    await runInitialScript();
+
+    expect(hasDarkClass()).toBe(true);
+    expect(localStorage.getItem(COLOR_MODE_STORAGE_KEY)).toBe(COLOR_MODE.SYSTEM);
+    expect(localStorage.getItem(LEGACY_COLOR_MODE_STORAGE_KEY)).toBeNull();
+  });
+
+  it("keeps the current key and leaves the legacy key untouched when both are present", async () => {
+    localStorage.setItem(COLOR_MODE_STORAGE_KEY, COLOR_MODE.LIGHT);
+    localStorage.setItem(LEGACY_COLOR_MODE_STORAGE_KEY, COLOR_MODE.DARK);
+
+    await runInitialScript();
+
+    expect(hasDarkClass()).toBe(false);
+    expect(localStorage.getItem(COLOR_MODE_STORAGE_KEY)).toBe(COLOR_MODE.LIGHT);
+    expect(localStorage.getItem(LEGACY_COLOR_MODE_STORAGE_KEY)).toBe(COLOR_MODE.DARK);
+  });
+});
+
 describe("initial.ts — runtime contract on window", () => {
   beforeEach(() => {
     stubPrefersDark(false);
+  });
+
+  it("uses the @variablelab/theme-toggle storage key and event name", async () => {
+    await runInitialScript();
+
+    expect(window.__COLOR_MODE__.STORAGE_KEY).toBe("@variablelab/theme-toggle.colorMode");
+    expect(window.__COLOR_MODE__.CUSTOM_EVENT).toBe("@variablelab/theme-toggle.colorModeChange");
   });
 
   it("exposes the storage key, event name, and color-mode map on window", async () => {
