@@ -111,7 +111,7 @@ describe("useColorMode — migrates the @vlandoss/theme-toggle 1.x storage key",
     expect(localStorage.getItem(LEGACY_COLOR_MODE_STORAGE_KEY)).toBeNull();
   });
 
-  it("keeps the current key and leaves the legacy key untouched when both are present", async () => {
+  it("keeps the current key and removes the legacy key when both are present", async () => {
     localStorage.setItem(COLOR_MODE_STORAGE_KEY, COLOR_MODE.LIGHT);
     localStorage.setItem(LEGACY_COLOR_MODE_STORAGE_KEY, COLOR_MODE.DARK);
 
@@ -120,7 +120,7 @@ describe("useColorMode — migrates the @vlandoss/theme-toggle 1.x storage key",
     expect(result.current.colorMode).toBe(COLOR_MODE.LIGHT);
     expect(hasDarkClass()).toBe(false);
     expect(readStoredMode()).toBe(COLOR_MODE.LIGHT);
-    expect(localStorage.getItem(LEGACY_COLOR_MODE_STORAGE_KEY)).toBe(COLOR_MODE.DARK);
+    expect(localStorage.getItem(LEGACY_COLOR_MODE_STORAGE_KEY)).toBeNull();
   });
 
   it('falls back to "system" and logs when the migrated legacy value is invalid', async () => {

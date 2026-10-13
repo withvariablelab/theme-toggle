@@ -109,9 +109,9 @@ The package was renamed to `@variablelab/theme-toggle` in 2.0.0:
 2. Listeners of the change event must use the new name, `@variablelab/theme-toggle.colorModeChange`
    (or read it from `window.__COLOR_MODE__.CUSTOM_EVENT`).
 
-Saved preferences carry over automatically: on init, if the new storage key is empty and the old
-`@vlandoss/theme-toggle.colorMode` key exists, its value is copied to the new key and the old key
-is removed.
+Saved preferences carry over automatically. On init, if the old `@vlandoss/theme-toggle.colorMode`
+key exists, its value is copied to the new storage key, unless the new key already holds a value
+(that value wins). The old key is then removed either way.
 
 ## Development
 

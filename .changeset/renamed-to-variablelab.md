@@ -12,4 +12,4 @@ Renamed from `@vlandoss/theme-toggle`. The package now lives at [withvariablelab
 
 **Automatic migration**
 
-Users keep their saved color mode. On init, both the inline script and `useColorMode` check for the 1.x key: if `@variablelab/theme-toggle.colorMode` is absent and `@vlandoss/theme-toggle.colorMode` exists, its value is copied to the new key and the old key is removed. A value already stored under the new key always wins.
+Users keep their saved color mode. On init, both the inline script and `useColorMode` check for the 1.x key: if `@variablelab/theme-toggle.colorMode` is absent and `@vlandoss/theme-toggle.colorMode` exists, its value is copied to the new key. A value already stored under the new key always wins. Either way, the old key is removed.

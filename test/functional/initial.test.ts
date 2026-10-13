@@ -121,7 +121,7 @@ describe("initial.ts — migrates the @vlandoss/theme-toggle 1.x storage key", (
     expect(localStorage.getItem(LEGACY_COLOR_MODE_STORAGE_KEY)).toBeNull();
   });
 
-  it("keeps the current key and leaves the legacy key untouched when both are present", async () => {
+  it("keeps the current key and removes the legacy key when both are present", async () => {
     localStorage.setItem(COLOR_MODE_STORAGE_KEY, COLOR_MODE.LIGHT);
     localStorage.setItem(LEGACY_COLOR_MODE_STORAGE_KEY, COLOR_MODE.DARK);
 
@@ -129,7 +129,7 @@ describe("initial.ts — migrates the @vlandoss/theme-toggle 1.x storage key", (
 
     expect(hasDarkClass()).toBe(false);
     expect(localStorage.getItem(COLOR_MODE_STORAGE_KEY)).toBe(COLOR_MODE.LIGHT);
-    expect(localStorage.getItem(LEGACY_COLOR_MODE_STORAGE_KEY)).toBe(COLOR_MODE.DARK);
+    expect(localStorage.getItem(LEGACY_COLOR_MODE_STORAGE_KEY)).toBeNull();
   });
 });
 
