@@ -28,7 +28,7 @@ jobs:
           node-version-file: .node-version
 
       - name: ⌛ Setup pnpm
-        # First-party action, deliberately tracked at @main (MIGRATION.md, Regla 4).
+        # First-party action, deliberately tracked at @main.
         uses: withvariablelab/gh-actions/actions/setup-pnpm@main # zizmor: ignore[unpinned-uses]
 
       - name: 💅 Check

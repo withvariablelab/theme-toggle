@@ -39,7 +39,7 @@ jobs:
           node-version-file: .node-version
 
       - name: ⌛ Setup pnpm
-        # First-party action, deliberately tracked at @main (MIGRATION.md, Regla 4).
+        # First-party action, deliberately tracked at @main.
         uses: withvariablelab/gh-actions/actions/setup-pnpm@main # zizmor: ignore[unpinned-uses]
 
       - name: 🔑 Mint vland-bot token
@@ -94,12 +94,12 @@ jobs:
           node-version-file: .node-version
 
       - name: ⌛ Setup CI
-        # First-party action, deliberately tracked at @main (MIGRATION.md, Regla 4).
+        # First-party action, deliberately tracked at @main.
         uses: withvariablelab/gh-actions/actions/setup-pnpm@main # zizmor: ignore[unpinned-uses]
 
       - name: 🚀 Publish preview
         id: preview
-        # First-party action, deliberately tracked at @main (MIGRATION.md, Regla 4).
+        # First-party action, deliberately tracked at @main.
         uses: withvariablelab/gh-actions/actions/preview-release@main # zizmor: ignore[unpinned-uses]
         with:
           mode: publish
@@ -113,7 +113,7 @@ jobs:
     needs: preview
     if: ${{ needs.preview.result == 'success' }}
     permissions: {}
-    # First-party reusable workflow, deliberately tracked at @main (MIGRATION.md, Regla 4).
+    # First-party reusable workflow, deliberately tracked at @main.
     uses: withvariablelab/gh-actions/.github/workflows/preview-comment.yml@main # zizmor: ignore[unpinned-uses]
     with:
       action: preview-release
