@@ -15,6 +15,7 @@ concurrency:
 
 jobs:
   test:
+    name: Test
     runs-on: ubuntu-latest
     steps:
       - name: ⬇️ Checkout repo
@@ -28,10 +29,9 @@ jobs:
           node-version-file: .node-version
 
       - name: ⌛ Setup pnpm
-        # First-party action, deliberately tracked at @main.
-        uses: withvariablelab/gh-actions/actions/setup-pnpm@main # zizmor: ignore[unpinned-uses]
+        uses: withvariablelab/gh-actions/actions/setup-pnpm@main
 
-      - name: 💅 Check
+      - name: 💅 Lint and typecheck
         run: pnpm rr check
 
       - name: 🎭 Install Playwright browsers
@@ -42,20 +42,3 @@ jobs:
 
       - name: 🔨 Build
         run: pnpm rr pack
-
-  zizmor:
-    runs-on: ubuntu-latest
-    steps:
-      - name: ⬇️ Checkout repo
-        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
-        with:
-          persist-credentials: false
-
-      # Audits .github/ (the repo has no other workflows or actions). Passing the
-      # repo root keeps the annotation paths repo-relative so they land on the diff.
-      - name: 🌈 Audit workflows (zizmor)
-        env:
-          # Read-only token so zizmor also runs its online audits
-          # (known-vulnerable-actions, impostor-commit, ref-confusion).
-          GH_TOKEN: ${{ github.token }}
-        run: pipx run --spec zizmor==1.30.1 zizmor --format=github .

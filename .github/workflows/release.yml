@@ -9,7 +9,6 @@ on:
     branches:
       - main
 
-# The org default GITHUB_TOKEN is read-only; each job asks for exactly what it needs.
 permissions: {}
 
 concurrency:
@@ -18,10 +17,9 @@ concurrency:
 
 jobs:
   release:
+    name: Release
     if: ${{ github.event_name == 'push' }}
     runs-on: ubuntu-latest
-    # Pushes, the version PR and the GitHub releases go through the vland-bot
-    # token minted below, not GITHUB_TOKEN.
     permissions:
       id-token: write # npm trusted publishing (OIDC)
       contents: read # checkout
@@ -29,8 +27,6 @@ jobs:
       - name: ⬇️ Checkout repo
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
-          # changesets/action writes ~/.netrc with its GITHUB_TOKEN (the
-          # vland-bot token below) and pushes through it.
           persist-credentials: false
 
       - name: 🟢 Setup Node.js
@@ -39,8 +35,7 @@ jobs:
           node-version-file: .node-version
 
       - name: ⌛ Setup pnpm
-        # First-party action, deliberately tracked at @main.
-        uses: withvariablelab/gh-actions/actions/setup-pnpm@main # zizmor: ignore[unpinned-uses]
+        uses: withvariablelab/gh-actions/actions/setup-pnpm@main
 
       - name: 🔑 Mint vland-bot token
         id: app-token
@@ -60,21 +55,22 @@ jobs:
           git config user.name "${APP_SLUG}[bot]"
           git config user.email "${user_id}+${APP_SLUG}[bot]@users.noreply.github.com"
 
-      - name: 🚀 Create release PR or publish versions
+      - name: 🚀 Release or version PR
         uses: changesets/action@a45c4d594aa4e2c509dc14a9f2b3b67ba3780d0d # v1.9.0
         with:
           commit: "chore: update versions"
           title: "chore: update versions"
           publish: pnpm changeset publish
           setupGitUser: false
+          github-token: ${{ steps.app-token.outputs.token }}
+          commitMode: github-api
         env:
-          # The bot opens the version PR, so CI runs on it.
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
           LEFTHOOK: 0
 
-  # Runs the PR's code and publishes the preview to npm via OIDC. It never sees
-  # the vland-bot key; it only hands the published package list to the next job.
+  # Runs PR code: never give this job the bot key.
   preview:
+    name: Publish preview
     if: ${{ github.event_name == 'pull_request' && (startsWith(github.head_ref, 'feat') || startsWith(github.head_ref, 'fix') || contains(github.event.pull_request.labels.*.name, 'preview')) }}
     runs-on: ubuntu-latest
     permissions:
@@ -93,28 +89,22 @@ jobs:
         with:
           node-version-file: .node-version
 
-      - name: ⌛ Setup CI
-        # First-party action, deliberately tracked at @main.
-        uses: withvariablelab/gh-actions/actions/setup-pnpm@main # zizmor: ignore[unpinned-uses]
+      - name: ⌛ Setup pnpm
+        uses: withvariablelab/gh-actions/actions/setup-pnpm@main
 
       - name: 🚀 Publish preview
         id: preview
-        # First-party action, deliberately tracked at @main.
-        uses: withvariablelab/gh-actions/actions/preview-release@main # zizmor: ignore[unpinned-uses]
+        uses: withvariablelab/gh-actions/actions/preview-release@main
         with:
           mode: publish
-          # Keep this explicit while the repo has a project .npmrc: preview-release
-          # auto-detects any .npmrc as token-only, and there is no NPM_TOKEN here.
+          # Explicit: an .npmrc would make preview-release default to token mode.
           publish_mode: oidc-only
-
-  # Never checks out or runs PR code: the reusable workflow mints the vland-bot
-  # token (pull-requests: write, this repo only) and upserts the PR comment.
   preview-comment:
+    name: Comment preview
     needs: preview
     if: ${{ needs.preview.result == 'success' }}
     permissions: {}
-    # First-party reusable workflow, deliberately tracked at @main.
-    uses: withvariablelab/gh-actions/.github/workflows/preview-comment.yml@main # zizmor: ignore[unpinned-uses]
+    uses: withvariablelab/gh-actions/.github/workflows/preview-comment.yml@main
     with:
       action: preview-release
       packages: ${{ needs.preview.outputs.packages }}
