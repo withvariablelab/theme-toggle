@@ -103,6 +103,8 @@ jobs:
         uses: withvariablelab/gh-actions/actions/preview-release@main # zizmor: ignore[unpinned-uses]
         with:
           mode: publish
+          # Keep this explicit while the repo has a project .npmrc: preview-release
+          # auto-detects any .npmrc as token-only, and there is no NPM_TOKEN here.
           publish_mode: oidc-only
 
   # Never checks out or runs PR code: the reusable workflow mints the vland-bot
