@@ -1,6 +1,3 @@
-# Static security analysis of the GitHub Actions workflows (zizmor).
-# Config and reviewed exceptions: .github/zizmor.yml
-
 name: Workflow audit
 
 on:
@@ -26,11 +23,9 @@ jobs:
         with:
           persist-credentials: false
 
-      # Audits .github/ (the repo has no other workflows or actions). Passing the
-      # repo root keeps the annotation paths repo-relative so they land on the diff.
+      # Repo root, not .github/: keeps annotation paths repo-relative.
       - name: 🔒 Scan workflows
         env:
-          # Read-only token so zizmor also runs its online audits
-          # (known-vulnerable-actions, impostor-commit, ref-confusion).
+          # Enables zizmor's online audits.
           GH_TOKEN: ${{ github.token }}
         run: pipx run --spec zizmor==1.30.1 zizmor --format=github .

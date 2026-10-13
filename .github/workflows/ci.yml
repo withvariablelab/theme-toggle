@@ -1,5 +1,3 @@
-# Lints, typechecks, tests and builds every PR to main.
-
 name: CI
 
 on:
@@ -31,7 +29,6 @@ jobs:
           node-version-file: .node-version
 
       - name: ⌛ Setup pnpm
-        # First-party action, deliberately tracked at @main.
         uses: withvariablelab/gh-actions/actions/setup-pnpm@main
 
       - name: 💅 Lint and typecheck
