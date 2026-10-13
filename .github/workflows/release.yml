@@ -65,7 +65,6 @@ jobs:
           github-token: ${{ steps.app-token.outputs.token }}
           commitMode: github-api
         env:
-          # The bot opens the version PR, so CI runs on it.
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
           LEFTHOOK: 0
 
