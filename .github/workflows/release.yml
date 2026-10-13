@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       id-token: write # npm trusted publishing (OIDC)
-      contents: read # checkout
+      contents: read
     steps:
       - name: ⬇️ Checkout repo
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
@@ -75,7 +75,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       id-token: write # npm trusted publishing (OIDC)
-      contents: read # checkout
+      contents: read
     outputs:
       packages: ${{ steps.preview.outputs.packages }}
     steps:
@@ -99,6 +99,7 @@ jobs:
           mode: publish
           # Explicit: an .npmrc would make preview-release default to token mode.
           publish_mode: oidc-only
+
   preview-comment:
     name: Comment preview
     needs: preview
