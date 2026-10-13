@@ -1,14 +1,14 @@
 {
-  "name": "@vlandoss/theme-toggle",
+  "name": "@variablelab/theme-toggle",
   "version": "1.0.0",
   "description": "Light/dark/system color-mode toggle for React with a no-flash inline script",
-  "homepage": "https://github.com/variableland/theme-toggle#readme",
+  "homepage": "https://github.com/withvariablelab/theme-toggle#readme",
   "bugs": {
-    "url": "https://github.com/variableland/theme-toggle/issues"
+    "url": "https://github.com/withvariablelab/theme-toggle/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/variableland/theme-toggle.git"
+    "url": "git+https://github.com/withvariablelab/theme-toggle.git"
   },
   "license": "MIT",
   "author": "rcrd <rcrd@variable.land>",
@@ -62,5 +62,5 @@
     "react": ">=18",
     "react-dom": ">=18"
   },
-  "packageManager": "pnpm@10.6.4"
+  "packageManager": "pnpm@10.30.3"
 }
