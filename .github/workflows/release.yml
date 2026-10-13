@@ -1,3 +1,7 @@
+# On push to main: opens the version PR, or publishes to npm once it is merged.
+# On pull requests from feat*/fix* branches or labeled "preview": publishes a
+# preview build of the PR to npm and comments how to install it.
+
 name: Release
 
 on:
@@ -18,10 +22,12 @@ concurrency:
 
 jobs:
   release:
+    name: Release or open version PR
     if: ${{ github.event_name == 'push' }}
     runs-on: ubuntu-latest
-    # Pushes, the version PR and the GitHub releases go through the vland-bot
-    # token minted below, not GITHUB_TOKEN.
+    # The version commit, the version PR, the tags and the GitHub releases are
+    # created through the GitHub API with the vland-bot token minted below, not
+    # GITHUB_TOKEN.
     permissions:
       id-token: write # npm trusted publishing (OIDC)
       contents: read # checkout
@@ -29,8 +35,8 @@ jobs:
       - name: ⬇️ Checkout repo
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
-          # changesets/action writes ~/.netrc with its GITHUB_TOKEN (the
-          # vland-bot token below) and pushes through it.
+          # Nothing here pushes with git: changesets/action commits and tags
+          # through the GitHub API.
           persist-credentials: false
 
       - name: 🟢 Setup Node.js
@@ -38,9 +44,9 @@ jobs:
         with:
           node-version-file: .node-version
 
-      - name: ⌛ Setup pnpm
+      - name: ⌛ Setup pnpm and install dependencies
         # First-party action, deliberately tracked at @main.
-        uses: withvariablelab/gh-actions/actions/setup-pnpm@main # zizmor: ignore[unpinned-uses]
+        uses: withvariablelab/gh-actions/actions/setup-pnpm@main
 
       - name: 🔑 Mint vland-bot token
         id: app-token
@@ -51,7 +57,10 @@ jobs:
           permission-contents: write
           permission-pull-requests: write
 
-      - name: 🧑‍💻 Configure git user
+      # `changeset version` commits locally because .changeset/config.json sets
+      # `commit: true`, and git needs an identity for that. The local commit
+      # never leaves the runner: changesets/action recreates it through the API.
+      - name: 🧑‍💻 Configure git user as vland-bot
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token }}
           APP_SLUG: ${{ steps.app-token.outputs.app-slug }}
@@ -60,21 +69,23 @@ jobs:
           git config user.name "${APP_SLUG}[bot]"
           git config user.email "${user_id}+${APP_SLUG}[bot]@users.noreply.github.com"
 
-      - name: 🚀 Create release PR or publish versions
-        uses: changesets/action@a45c4d594aa4e2c509dc14a9f2b3b67ba3780d0d # v1.9.0
+      - name: 🚀 Open version PR or publish to npm
+        uses: changesets/action@ae32849d5ba541f9ae29e40e22a623bc13562f51 # v2.1.2
         with:
-          commit: "chore: update versions"
-          title: "chore: update versions"
-          publish: pnpm changeset publish
-          setupGitUser: false
+          # With the bot token, GitHub signs the version commit and attributes
+          # it to vland-bot, so CI runs on the version PR.
+          github-token: ${{ steps.app-token.outputs.token }}
+          commit-message: "chore: update versions"
+          pr-title: "chore: update versions"
+          publish-script: pnpm changeset publish
         env:
-          # The bot opens the version PR, so CI runs on it.
-          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
+          # No git hooks on the local commit made by `changeset version`.
           LEFTHOOK: 0
 
   # Runs the PR's code and publishes the preview to npm via OIDC. It never sees
   # the vland-bot key; it only hands the published package list to the next job.
   preview:
+    name: Publish PR preview
     if: ${{ github.event_name == 'pull_request' && (startsWith(github.head_ref, 'feat') || startsWith(github.head_ref, 'fix') || contains(github.event.pull_request.labels.*.name, 'preview')) }}
     runs-on: ubuntu-latest
     permissions:
@@ -93,14 +104,14 @@ jobs:
         with:
           node-version-file: .node-version
 
-      - name: ⌛ Setup CI
+      - name: ⌛ Setup pnpm and install dependencies
         # First-party action, deliberately tracked at @main.
-        uses: withvariablelab/gh-actions/actions/setup-pnpm@main # zizmor: ignore[unpinned-uses]
+        uses: withvariablelab/gh-actions/actions/setup-pnpm@main
 
-      - name: 🚀 Publish preview
+      - name: 🚀 Publish PR preview to npm
         id: preview
         # First-party action, deliberately tracked at @main.
-        uses: withvariablelab/gh-actions/actions/preview-release@main # zizmor: ignore[unpinned-uses]
+        uses: withvariablelab/gh-actions/actions/preview-release@main
         with:
           mode: publish
           # Keep this explicit while the repo has a project .npmrc: preview-release
@@ -110,11 +121,12 @@ jobs:
   # Never checks out or runs PR code: the reusable workflow mints the vland-bot
   # token (pull-requests: write, this repo only) and upserts the PR comment.
   preview-comment:
+    name: Comment PR preview
     needs: preview
     if: ${{ needs.preview.result == 'success' }}
     permissions: {}
     # First-party reusable workflow, deliberately tracked at @main.
-    uses: withvariablelab/gh-actions/.github/workflows/preview-comment.yml@main # zizmor: ignore[unpinned-uses]
+    uses: withvariablelab/gh-actions/.github/workflows/preview-comment.yml@main
     with:
       action: preview-release
       packages: ${{ needs.preview.outputs.packages }}
