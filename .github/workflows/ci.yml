@@ -1,5 +1,4 @@
-# Runs on every pull request to main: lints, typechecks, tests and builds the
-# package.
+# Lints, typechecks, tests and builds every PR to main.
 
 name: CI
 
@@ -18,7 +17,7 @@ concurrency:
 
 jobs:
   test:
-    name: Lint, typecheck, test and build
+    name: Test
     runs-on: ubuntu-latest
     steps:
       - name: ⬇️ Checkout repo
@@ -31,18 +30,18 @@ jobs:
         with:
           node-version-file: .node-version
 
-      - name: ⌛ Setup pnpm and install dependencies
+      - name: ⌛ Setup pnpm
         # First-party action, deliberately tracked at @main.
         uses: withvariablelab/gh-actions/actions/setup-pnpm@main
 
-      - name: 💅 Lint, check formatting and typecheck
+      - name: 💅 Lint and typecheck
         run: pnpm rr check
 
-      - name: 🎭 Install Playwright Chromium
+      - name: 🎭 Install Playwright browsers
         run: pnpm exec playwright install --with-deps chromium
 
-      - name: 🧪 Run tests in the browser
+      - name: 🧪 Test
         run: pnpm test
 
-      - name: 🔨 Build the package
+      - name: 🔨 Build
         run: pnpm rr pack

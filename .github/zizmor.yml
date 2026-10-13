@@ -2,9 +2,6 @@ rules:
   unpinned-uses:
     config:
       policies:
-        # First-party: the workflows track withvariablelab/gh-actions at @main
-        # on purpose. Its main branch is protected by rulesets (PR required,
-        # signed commits, no force-push or deletion).
+        # First-party withvariablelab/gh-actions is tracked at @main on purpose.
         "withvariablelab/*": ref-pin
-        # Everything else must be pinned to a full commit SHA.
         "*": hash-pin

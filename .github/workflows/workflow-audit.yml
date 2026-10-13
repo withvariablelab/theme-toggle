@@ -1,10 +1,4 @@
-# Workflow audit
-#
-# Scans every GitHub Actions workflow in .github/ with zizmor, a static
-# analyzer for CI security mistakes: untrusted input interpolated into
-# shell commands, credentials left behind by checkout, actions not pinned
-# to a commit SHA, overly broad permissions, dangerous triggers such as
-# pull_request_target. The check fails when a workflow introduces one.
+# Static security analysis of the GitHub Actions workflows (zizmor).
 # Config and reviewed exceptions: .github/zizmor.yml
 
 name: Workflow audit
@@ -34,7 +28,7 @@ jobs:
 
       # Audits .github/ (the repo has no other workflows or actions). Passing the
       # repo root keeps the annotation paths repo-relative so they land on the diff.
-      - name: 🔒 Scan .github/ for insecure workflow patterns
+      - name: 🔒 Scan workflows
         env:
           # Read-only token so zizmor also runs its online audits
           # (known-vulnerable-actions, impostor-commit, ref-confusion).
