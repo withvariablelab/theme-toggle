@@ -97,7 +97,6 @@ jobs:
         uses: withvariablelab/gh-actions/actions/preview-release@main
         with:
           mode: publish
-          # Explicit: an .npmrc would make preview-release default to token mode.
           publish_mode: oidc-only
 
   preview-comment:
