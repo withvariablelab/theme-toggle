@@ -1,5 +1,11 @@
 # @variablelab/theme-toggle
 
+## 2.0.1
+
+### Patch Changes
+
+- [#14](https://github.com/withvariablelab/theme-toggle/pull/14) [`6cc642d`](https://github.com/withvariablelab/theme-toggle/commit/6cc642d1ae7d326ad188756ded6f756110685ae0) Thanks [@rqbazan](https://github.com/rqbazan)! - Put the Sign and the Tagline at the top of the README, and set the author to `rcrd <ricardo@variable.land>`.
+
 ## 2.0.0
 
 ### Major Changes
