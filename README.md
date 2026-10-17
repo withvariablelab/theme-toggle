@@ -1,4 +1,10 @@
-# @variablelab/theme-toggle
+<p align="center">
+  <img src="https://raw.githubusercontent.com/withvariablelab/theme-toggle/HEAD/brand/sign-readme.svg" width="64" height="64" alt="">
+</p>
+
+<h1 align="center">theme-toggle</h1>
+
+<p align="center">The theme is set before first paint.</p>
 
 Light/dark/system color-mode toggle for React apps, with a tiny inline script that
 sets the theme **before first paint** to avoid the flash of the wrong theme (FOUC).
