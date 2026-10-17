@@ -1,6 +1,6 @@
 {
   "name": "@variablelab/theme-toggle",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Light/dark/system color-mode toggle for React with a no-flash inline script",
   "homepage": "https://github.com/withvariablelab/theme-toggle#readme",
   "bugs": {
