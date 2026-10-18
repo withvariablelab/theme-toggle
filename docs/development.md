@@ -10,10 +10,9 @@ How to work on theme-toggle in a clone. The [contributing guide](contributing.md
 mise install
 pnpm install
 playwright install chromium   # the browser the tests run in
-lefthook install              # the git hooks in lefthook.yml
 ```
 
-pnpm doesn't run lefthook's own install script, so the hooks need `lefthook install` once. After changing a version in `mise.toml`, run `mise lock` and commit both files.
+`pnpm install` also installs the git hooks in `lefthook.yml`, because `pnpm-workspace.yaml` allows lefthook's install script. After changing a version in `mise.toml`, run `mise lock` and commit both files.
 
 ## Tasks
 
