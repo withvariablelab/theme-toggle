@@ -98,9 +98,9 @@ document.addEventListener("@variablelab/theme-toggle.colorModeChange", (event) =
 
 The inline script also publishes these names on `window.__COLOR_MODE__` (`STORAGE_KEY`, `CUSTOM_EVENT`, `COLOR_MODE`), so other scripts can read them without importing the package.
 
-## Upgrading from `@vlandoss/theme-toggle` 1.x
+## Upgrading from 1.x
 
-The package was renamed to `@variablelab/theme-toggle` in 2.0.0:
+The package was renamed from `@vlandoss/theme-toggle` to `@variablelab/theme-toggle` in 2.0.0:
 
 1. Replace the dependency and imports with `pnpm remove @vlandoss/theme-toggle && pnpm add @variablelab/theme-toggle`, and change the inline script URL to `https://unpkg.com/@variablelab/theme-toggle/dist/initial.js`.
 2. Listeners of the change event must use the new name, `@variablelab/theme-toggle.colorModeChange`, or read it from `window.__COLOR_MODE__.CUSTOM_EVENT`.
