@@ -1,5 +1,11 @@
 # @variablelab/theme-toggle
 
+## 2.0.2
+
+### Patch Changes
+
+- [#21](https://github.com/withvariablelab/theme-toggle/pull/21) [`4ad51dc`](https://github.com/withvariablelab/theme-toggle/commit/4ad51dc4777835fa7936a83a57fa5bddaafebc30) Thanks [@rqbazan](https://github.com/rqbazan)! - Restructure the README, with the name linked to the Project page and the development notes moved to the repository's development guide, and name `rcrd <ricardo@variable.land>` in the LICENSE.
+
 ## 2.0.1
 
 ### Patch Changes
