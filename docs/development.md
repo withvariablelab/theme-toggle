@@ -4,7 +4,7 @@ How to work on theme-toggle in a clone. The [contributing guide](contributing.md
 
 ## Setup
 
-[mise](https://mise.jdx.dev) pins Node 24 and pnpm in `mise.toml`, with checksums in `mise.lock`, and puts `node_modules/.bin` on the `PATH`, so the tools run by name:
+[mise](https://mise.jdx.dev) 2026.10.19 or later pins Node 24, pnpm 12 and [gitleaks](https://github.com/gitleaks/gitleaks) in `mise.toml`, with checksums in `mise.lock`, and puts `node_modules/.bin` on the `PATH`, so the tools run by name:
 
 ```sh
 mise install
