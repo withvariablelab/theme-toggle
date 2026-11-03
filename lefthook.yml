@@ -1,13 +1,14 @@
-pre-commit:
-  parallel: true
-  jobs:
-    - name: jsc
-      run: pnpm rr jsc --fix-staged
-      stage_fixed: true
+extends:
+  - node_modules/@rrlab/cli/lefthook/base.yml
 
-    - name: tsc
-      glob: "*.{ts,tsx,json}"
-      run: pnpm rr tsc
+pre-commit:
+  jobs:
+    - name: shared-hooks
+      run: |
+        if [ ! -f node_modules/@rrlab/cli/lefthook/base.yml ]; then
+          echo "@rrlab/cli's git hooks are missing from node_modules: run pnpm install, then commit again."
+          exit 1
+        fi
 
 pre-push:
   jobs:

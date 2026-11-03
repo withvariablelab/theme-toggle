@@ -12,7 +12,7 @@ pnpm install
 playwright install chromium   # the browser the tests run in
 ```
 
-`pnpm install` also installs the git hooks in `lefthook.yml`, because `pnpm-workspace.yaml` allows lefthook's install script. After changing a version in `mise.toml`, run `mise lock` and commit both files.
+`pnpm install` also installs the git hooks in `lefthook.yml`, because `pnpm-workspace.yaml` allows lefthook's install script. With `CI` set, that script skips them, so after a `CI=1 pnpm install` run `pnpm lefthook install` to add them. After changing a version in `mise.toml`, run `mise lock` and commit both files.
 
 ## Tasks
 
@@ -28,5 +28,5 @@ The suite in `test/functional` runs in Vitest Browser Mode with Playwright. It c
 ## CI
 
 - **On each pull request to `main`:** `pnpm rr check`, `pnpm test` and the build with `pnpm rr pack` (CI), and zizmor on the workflows (Workflow audit).
-- **Git hooks** ([lefthook](https://lefthook.dev)): on commit, Biome's fixes on the staged files and the type check; on push, the tests.
+- **Git hooks** ([lefthook](https://lefthook.dev)): `lefthook.yml` extends `lefthook/base.yml` from `@rrlab/cli`, whose jobs are listed in [its README](https://github.com/withvariablelab/dx/blob/main/run-run/cli/README.md#git-hooks), and its own `shared-hooks` job fails a commit, saying to run `pnpm install`, when that file is missing from `node_modules`. On commit, in parallel: Biome's fixes on the staged files, the type check when a TypeScript file or a tsconfig changes, and gitleaks on the staged changes. On push, the tests.
 - **Every Monday:** `pnpm audit` on the lockfile, which keeps an issue labeled `dependency-audit` open while it finds known vulnerabilities (Dependency audit).
