@@ -1,5 +1,11 @@
 # @variablelab/theme-toggle
 
+## 2.0.3
+
+### Patch Changes
+
+- [#26](https://github.com/withvariablelab/theme-toggle/pull/26) [`2017cd6`](https://github.com/withvariablelab/theme-toggle/commit/2017cd6f2069394f51632110102f00fc9a804e8e) Thanks [@rqbazan](https://github.com/rqbazan)! - Build `dist/` with tsdown 0.23 and TypeScript 7. The API is unchanged: the bundle's comments and the type declarations' layout differ.
+
 ## 2.0.2
 
 ### Patch Changes
