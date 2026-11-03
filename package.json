@@ -31,37 +31,43 @@
     "test": "rr test run"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.0.0",
+    "@biomejs/biome": "^2.6.4",
     "@changesets/changelog-github": "^1.0.1",
     "@changesets/cli": "^3.0.3",
-    "@rrlab/biome-config": "^0.0.3",
-    "@rrlab/biome-plugin": "^1.1.3",
-    "@rrlab/cli": "^1.3.2",
-    "@rrlab/oxc-plugin": "^1.1.3",
-    "@rrlab/ts-config": "^0.0.3",
-    "@rrlab/tsdown-config": "^0.1.1",
-    "@rrlab/tsdown-plugin": "^1.1.3",
-    "@rrlab/vitest-plugin": "^0.1.2",
-    "@types/node": "^24.13.2",
+    "@rrlab/biome-config": "^0.0.7",
+    "@rrlab/biome-plugin": "^1.2.3",
+    "@rrlab/cli": "^1.7.0",
+    "@rrlab/oxc-plugin": "^1.3.0",
+    "@rrlab/ts-config": "^0.0.6",
+    "@rrlab/tsdown-config": "^0.2.1",
+    "@rrlab/tsdown-plugin": "^1.3.0",
+    "@rrlab/vitest-plugin": "^0.3.0",
+    "@types/node": "^26.6.6",
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.0",
-    "@vitest/browser": "4.1.12",
-    "@vitest/browser-playwright": "4.1.12",
-    "lefthook": "^2.1.9",
-    "oxfmt": "^0.73.0",
-    "oxlint": "^1.0.0",
-    "oxlint-tsgolint": "^0.25.0",
-    "playwright": "1.61.1",
+    "@vitest/browser": "5.0.5",
+    "@vitest/browser-playwright": "5.0.5",
+    "lefthook": "^2.2.2",
+    "oxfmt": "^0.75.0",
+    "oxlint": "^1.90.0",
+    "oxlint-tsgolint": "^7.0.2005",
+    "playwright": "1.64.1",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
-    "tsdown": "^0.22.0",
-    "typescript": "^6.0.3",
-    "vitest": "^4.0.0",
-    "vitest-browser-react": "2.2.0"
+    "tsdown": "^0.23.4",
+    "typescript": "^7.0.2",
+    "vitest": "5.0.5",
+    "vitest-browser-react": "2.3.0"
   },
   "peerDependencies": {
     "react": ">=18",
     "react-dom": ">=18"
   },
-  "packageManager": "pnpm@10.30.3"
+  "devEngines": {
+    "packageManager": {
+      "name": "pnpm",
+      "version": "12.16.1",
+      "onFail": "error"
+    }
+  }
 }

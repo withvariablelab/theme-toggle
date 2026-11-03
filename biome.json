@@ -1,4 +1,7 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.5.1/schema.json",
-  "extends": ["@rrlab/biome-config"]
+  "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+  "extends": ["@rrlab/biome-config"],
+  "files": {
+    "includes": ["**", "!.mise/locks", "!.changeset/*.md", "!CHANGELOG.md", "!.github/workflows/pullfrog.yml"]
+  }
 }
