@@ -1,7 +1,7 @@
 name: Workflow audit
 
 on:
-  # Not on `labeled`: zizmor reads no label, and labels added at once could cancel the run GitHub reads Audit workflows from.
+  # Not on `labeled`: zizmor reads no label, and a label run cancelled before its jobs start hides Audit workflows.
   pull_request:
     branches:
       - main
