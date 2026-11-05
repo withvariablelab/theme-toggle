@@ -74,12 +74,11 @@ jobs:
     # One publish per commit: feat/fix pushes publish, and `preview` from the label run that adds it or a later push.
     if: >-
       ${{ github.event_name == 'pull_request'
-        && ((github.event.action == 'labeled'
-          && github.event.label.name == 'preview'
-          && !startsWith(github.head_ref, 'feat') && !startsWith(github.head_ref, 'fix'))
-        || (github.event.action != 'labeled'
-          && (startsWith(github.head_ref, 'feat') || startsWith(github.head_ref, 'fix')
-            || (github.event.action != 'opened' && contains(github.event.pull_request.labels.*.name, 'preview'))))) }}
+        && ((github.event.action != 'labeled' && (startsWith(github.head_ref, 'feat') || startsWith(github.head_ref, 'fix')))
+          || (github.event.action == 'labeled' && github.event.label.name == 'preview'
+            && !(startsWith(github.head_ref, 'feat') || startsWith(github.head_ref, 'fix')))
+          || ((github.event.action == 'synchronize' || github.event.action == 'reopened')
+            && contains(github.event.pull_request.labels.*.name, 'preview'))) }}
     # One publish to `pr-<number>` at a time: label runs don't share the workflow's group.
     concurrency:
       group: ${{ github.workflow }}-preview-${{ github.ref }}
