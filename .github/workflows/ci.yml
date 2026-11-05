@@ -1,8 +1,8 @@
 name: CI
 
 on:
+  # Not on `labeled`: CI reads no label, and labels added at once could cancel the run GitHub reads Test from.
   pull_request:
-    types: [opened, synchronize, reopened, labeled]
     branches:
       - main
 
